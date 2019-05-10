@@ -1,0 +1,43 @@
+{
+    "middlewares": {
+        "api": {
+            "functions": [ "ValidateAPIMiddleware" ],
+            "package": "mma/middleware"
+        }
+    },
+    "routes": {
+        "/": {
+            "package": "mma/api",
+            "/teams": {
+                "/{id}": {
+                    "middlewares": {
+                        "functions": [ "$api", "ValidateHTMLRequestMiddleware" ],
+                        "package": "mma/middleware",
+                        "exclude": [ "ValidateHTMLRequestMiddleware" ]
+                    },
+                    "methods": [ "GET" ],
+                    "/roster": {
+                        "function": "GetTeamRoster",
+                        "middlewares": {
+                            "functions": ["LoadUserMiddleware", "ValidateHTMLRequestMiddleware"],
+                            "package": "mma/middleware"
+                        }
+                    },
+                    "/transactions": {
+                        "function": "GetTeamTransactions"
+                    },
+                    "/points": {
+                        "function": "GetTeamPoints"
+                    }
+                }
+            },
+            "/fighters": {
+                "methods": [ "GET" ],
+                "function": "GetFighters",
+                "/{id:[0-9]+}": {
+                    "function": "GetFightersById"
+                }
+            }
+        }
+    }
+}
